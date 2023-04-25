@@ -10,11 +10,14 @@ import { UserOutlined } from "@ant-design/icons";
 import SignUp from "../../Popup/SignUp";
 import { apiSignIn } from "../../../services/request/api";
 import { ShowSuccess, ShowError } from "../../Message";
+import { useDispatch } from "react-redux";
+import { getUser } from "../../../redux/appSlice";
 
 const SignIn = (_, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const signUpRef = useRef();
+  const dispatch = useDispatch();
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -31,8 +34,11 @@ const SignIn = (_, ref) => {
 
       localStorage.setItem(
         "ACCESS_TOKEN",
-        JSON.stringify({ accessToken: data.content.accessToken })
+        JSON.stringify({
+          accessToken: data.content.accessToken,
+        })
       );
+      dispatch(getUser(data?.content));
       ShowSuccess("Đăng nhập thành công");
       form.resetFields();
       setIsModalOpen(false);

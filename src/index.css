@@ -61,11 +61,3 @@ li {
 .ant-input-affix-wrapper .ant-input {
   padding: 8px 0px !important;
 }
-
-.rnc__notification {
-  width: 350px !important;
-}
-
-.rnc__notification-container--top-right {
-  top: 14px !important;
-}

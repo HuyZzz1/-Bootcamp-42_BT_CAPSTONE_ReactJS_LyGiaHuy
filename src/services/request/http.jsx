@@ -6,7 +6,7 @@ const http = axios.create({
   headers: {
     TokenCybersoft: TOKEN_CYBERSOFT,
     Authorization: `Bearer ${
-      JSON.parse(localStorage.getItem("ACCESS_TOKEN")).accessToken
+      JSON.parse(localStorage.getItem("ACCESS_TOKEN"))?.accessToken
     }`,
   },
 });

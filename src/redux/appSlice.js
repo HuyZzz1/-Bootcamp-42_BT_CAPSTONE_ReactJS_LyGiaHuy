@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   listSeatSelected: [],
+  user: {},
 };
 
-export const movieSlice = createSlice({
-  name: "movie",
+export const appSlice = createSlice({
+  name: "app",
   initialState,
   reducers: {
     booking: (state, action) => {
@@ -25,9 +26,12 @@ export const movieSlice = createSlice({
     resetBooking: (state) => {
       return { ...state, listSeatSelected: [] };
     },
+    getUser: (state, action) => {
+      return { ...state, user: action.payload };
+    },
   },
 });
 
-export const { booking, resetBooking } = movieSlice.actions;
+export const { booking, resetBooking, getUser } = appSlice.actions;
 
-export default movieSlice.reducer;
+export default appSlice.reducer;

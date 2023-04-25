@@ -65,3 +65,9 @@ export const apiBooking = async (params) => {
 
   return data;
 };
+
+export const apiGetUser = async () => {
+  const { data } = await http.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
+
+  return data;
+};

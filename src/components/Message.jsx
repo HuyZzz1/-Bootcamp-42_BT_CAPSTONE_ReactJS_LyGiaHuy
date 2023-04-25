@@ -1,34 +1,40 @@
-import { Store } from "react-notifications-component";
+import Swal from "sweetalert2";
 
 const ShowError = (errorCode) => {
-  Store.addNotification({
-    title: "Thông báo",
-    message: errorCode,
-    type: "danger",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animate__animated", "animate__fadeIn"],
-    animationOut: ["animate__animated", "animate__fadeOut"],
-    dismiss: {
-      duration: 3000,
-      onScreen: true,
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
+  });
+
+  Toast.fire({
+    icon: "error",
+    title: errorCode,
   });
 };
 
 const ShowSuccess = (successCode) => {
-  Store.addNotification({
-    title: "Thông báo",
-    message: successCode,
-    type: "success",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animate__animated", "animate__fadeIn"],
-    animationOut: ["animate__animated", "animate__fadeOut"],
-    dismiss: {
-      duration: 3000,
-      onScreen: true,
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
+  });
+
+  Toast.fire({
+    icon: "success",
+    title: successCode,
   });
 };
 
