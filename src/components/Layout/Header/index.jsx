@@ -10,18 +10,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { ShowSuccess } from "../../Message";
 import { apiGetMovies } from "../../../services/request/api";
 import { getUser } from "../../../redux/appSlice";
+import Info from "../../Popup/Info";
 
 const Header = () => {
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [keyword, setKeyword] = useState("");
   const user = useSelector((state) => state.app.user);
 
   const signInRef = useRef();
   const signUpRef = useRef();
-
-  console.log(user);
+  const infoRef = useRef();
 
   const getMovies = async () => {
     const data = await apiGetMovies();
@@ -44,8 +45,12 @@ const Header = () => {
       return {
         value: movie.maPhim,
         label: (
-          <div key={index}>
-            <h1>{movie?.tenPhim}</h1>
+          <div
+            key={index}
+            style={{ display: "flex", alignItems: "center", gap: 10 }}
+          >
+            <Avatar src={movie.hinhAnh} size={50} />
+            <h4>{movie?.tenPhim}</h4>
           </div>
         ),
       };
@@ -54,10 +59,12 @@ const Header = () => {
 
   const handleSearch = (value) => {
     setOptions(value ? searchResult(value) : []);
+    setKeyword(value);
   };
 
   const onSelect = (value) => {
     navigation(`/movie-detail/${value}`);
+    setKeyword("");
   };
 
   useEffect(() => {
@@ -68,6 +75,7 @@ const Header = () => {
     <>
       <SignIn ref={signInRef} />
       <SignUp ref={signUpRef} />
+      <Info ref={infoRef} />
       <Affix offsetTop={0}>
         <Wrapper>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -81,6 +89,7 @@ const Header = () => {
                 options={options}
                 onSelect={onSelect}
                 onSearch={handleSearch}
+                value={keyword}
               >
                 <Input.Search
                   size="large"
@@ -98,14 +107,14 @@ const Header = () => {
                 items: [
                   {
                     key: 1,
-                    label: <p>Thông tin tài khoản</p>,
+                    label: (
+                      <p onClick={() => infoRef.current.open()}>
+                        Thông tin tài khoản
+                      </p>
+                    ),
                   },
                   {
                     key: 2,
-                    label: <p>Lịch sử đặt vé</p>,
-                  },
-                  {
-                    key: 3,
                     label: (
                       <p style={{ color: "red" }} onClick={onLogOut}>
                         Đăng xuất
@@ -124,9 +133,7 @@ const Header = () => {
                 }}
               >
                 <Avatar icon={<UserOutlined />} />
-                <p style={{ fontWeight: 500, color: "white" }}>
-                  {user.taiKhoan}
-                </p>
+                <p style={{ fontWeight: 500, color: "white" }}>{user.hoTen}</p>
               </div>
             </Dropdown>
           ) : (

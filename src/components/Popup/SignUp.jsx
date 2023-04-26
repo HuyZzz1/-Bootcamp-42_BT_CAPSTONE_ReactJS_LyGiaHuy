@@ -1,9 +1,9 @@
 import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { Button, Form, Input, Avatar, Modal } from "antd";
-import { formValidate } from "../../../services/helper";
+import { formValidate } from "../../services/helper";
 import { UserOutlined } from "@ant-design/icons";
-import { apiSignUp } from "../../../services/request/api";
-import { ShowSuccess, ShowError } from "../../Message";
+import { apiSignUp } from "../../services/request/api";
+import { ShowSuccess, ShowError } from "../Message";
 
 const SignUp = (_, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

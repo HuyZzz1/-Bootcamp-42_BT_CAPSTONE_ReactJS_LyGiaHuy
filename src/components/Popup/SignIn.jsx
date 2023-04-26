@@ -5,25 +5,30 @@ import React, {
   useRef,
 } from "react";
 import { Button, Form, Input, Avatar, Modal } from "antd";
-import { formValidate } from "../../../services/helper";
+import { formValidate } from "../../services/helper";
 import { UserOutlined } from "@ant-design/icons";
-import SignUp from "../../Popup/SignUp";
-import { apiSignIn } from "../../../services/request/api";
-import { ShowSuccess, ShowError } from "../../Message";
+import SignUp from "./SignUp";
+import { apiSignIn, apiGetUser } from "../../services/request/api";
+import { ShowSuccess, ShowError } from "../Message";
 import { useDispatch } from "react-redux";
-import { getUser } from "../../../redux/appSlice";
+import { getUser } from "../../redux/appSlice";
 
 const SignIn = (_, ref) => {
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const signUpRef = useRef();
-  const dispatch = useDispatch();
 
   useImperativeHandle(ref, () => ({
     open: () => {
       setIsModalOpen(true);
     },
   }));
+
+  const getInfoUser = async () => {
+    const data = await apiGetUser();
+    dispatch(getUser(data.content));
+  };
 
   const onFinish = async (values) => {
     try {
@@ -38,7 +43,7 @@ const SignIn = (_, ref) => {
           accessToken: data.content.accessToken,
         })
       );
-      dispatch(getUser(data?.content));
+      getInfoUser();
       ShowSuccess("Đăng nhập thành công");
       form.resetFields();
       setIsModalOpen(false);

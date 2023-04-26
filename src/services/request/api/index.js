@@ -71,3 +71,14 @@ export const apiGetUser = async () => {
 
   return data;
 };
+
+export const updateUser = async (params) => {
+  console.log(params);
+  const { data } = await http.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", {
+    ...params,
+    maNhom: "GP00",
+    maLoaiNguoiDung: "KhachHang",
+  });
+
+  return data;
+};
