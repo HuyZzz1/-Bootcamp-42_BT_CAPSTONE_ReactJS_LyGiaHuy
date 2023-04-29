@@ -8,6 +8,7 @@ body {
   width: 100%;
   height: 100%;
   font-family: "Roboto" !important;
+  background: #f9f9f9;
 }
 
 h1,
@@ -64,4 +65,9 @@ li {
 
 .ant-col {
   width: 100% !important;
+}
+
+.ant-layout-sider-has-trigger,
+.ant-layout-sider-trigger {
+  transition: all 0.5s ease !important;
 }

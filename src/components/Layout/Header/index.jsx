@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AutoComplete, Input, Affix, Avatar, Dropdown } from "antd";
-import { Wrapper, Logo, Search } from "./styled";
+import { Wrapper, Logo, Search, WrapperLoading } from "./styled";
 import { StyledButtonAntd } from "../../styled";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import SignIn from "../../Popup/SignIn";
 import SignUp from "../../Popup/SignUp";
 import { UserOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ShowSuccess } from "../../Message";
-import { apiGetMovies } from "../../../services/request/api";
-import { getUser } from "../../../redux/appSlice";
+import { apiGetMovies, apiGetUser } from "../../../services/request/api";
 import Info from "../../Popup/Info";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/movieSlice";
+import Loading from "../../Loading";
 
 const Header = () => {
   const navigation = useNavigate();
@@ -18,20 +20,30 @@ const Header = () => {
   const [options, setOptions] = useState([]);
   const [movies, setMovies] = useState([]);
   const [keyword, setKeyword] = useState("");
-  const user = useSelector((state) => state.app.user);
+  const [infoUser, setInfoUser] = useState();
+  const user = useSelector((state) => state.movie.user);
+  const [isLoading, setLoading] = useState(true);
 
   const signInRef = useRef();
   const signUpRef = useRef();
   const infoRef = useRef();
 
+  const onInfo = () => infoRef.current.open(infoUser);
+
   const getMovies = async () => {
     const data = await apiGetMovies();
     setMovies(data.content);
+    setLoading(false);
+  };
+
+  const getUser = async () => {
+    const data = await apiGetUser();
+    setInfoUser(data?.content);
   };
 
   const onLogOut = () => {
     navigation("/");
-    dispatch(getUser({}));
+    dispatch(setUser({}));
     localStorage.removeItem("ACCESS_TOKEN");
     ShowSuccess("Đăng xuất thành công");
   };
@@ -69,7 +81,10 @@ const Header = () => {
 
   useEffect(() => {
     getMovies();
+    getUser();
   }, []);
+
+  if (isLoading) return <Loading />;
 
   return (
     <>
@@ -107,11 +122,7 @@ const Header = () => {
                 items: [
                   {
                     key: 1,
-                    label: (
-                      <p onClick={() => infoRef.current.open()}>
-                        Thông tin tài khoản
-                      </p>
-                    ),
+                    label: <p onClick={onInfo}>Thông tin tài khoản</p>,
                   },
                   {
                     key: 2,
@@ -151,6 +162,7 @@ const Header = () => {
           )}
         </Wrapper>
       </Affix>
+      <Outlet />
     </>
   );
 };

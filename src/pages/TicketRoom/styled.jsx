@@ -2,13 +2,9 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
   background: #f9f9f9;
   padding: 0 25px;
-
-  @media (max-width: 1440px) {
-    height: 100%;
-  }
 `;
 
 export const Seat = styled.button`

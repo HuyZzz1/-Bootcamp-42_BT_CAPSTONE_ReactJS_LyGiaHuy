@@ -2,29 +2,28 @@ import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Button, Card, Tag } from "antd";
 import { Wrapper, Seat, StyledButton } from "./styled";
 import { useSelector, useDispatch } from "react-redux";
-import { booking, resetBooking } from "../../redux/appSlice";
+import { booking, resetBooking } from "../../redux/movieSlice";
 import { useParams } from "react-router-dom";
 import { apiGetTicketRoom } from "../../services/request/api";
 import { apiBooking } from "../../services/request/api";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SignIn from "../../components/Popup/SignIn";
+import Loading from "../../components/Loading";
 
 const TicketRoom = () => {
   const signInRef = useRef();
   const MySwal = withReactContent(Swal);
   const { maLichChieu } = useParams();
   const [dataTicketRoom, setDataTicketRoom] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const dataSeatSelected = useSelector((state) => state.app.listSeatSelected);
+  const dataSeatSelected = useSelector((state) => state.movie.listSeatSelected);
 
   const getTicketRoom = async () => {
-    try {
-      const data = await apiGetTicketRoom(maLichChieu);
-      setDataTicketRoom(data.content);
-    } catch (err) {
-      console.log(err);
-    }
+    const data = await apiGetTicketRoom(maLichChieu);
+    setDataTicketRoom(data.content);
+    setIsLoading(false);
   };
 
   const handleBooking = () => {
@@ -69,6 +68,8 @@ const TicketRoom = () => {
   useEffect(() => {
     getTicketRoom();
   }, []);
+
+  if (isLoading) return <Loading />;
 
   return (
     <>

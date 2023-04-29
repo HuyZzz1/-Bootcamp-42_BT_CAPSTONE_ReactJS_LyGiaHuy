@@ -30,6 +30,7 @@ const Banner = () => {
   return (
     <WrapperSwiper>
       <Swiper
+        cssMode={false}
         pagination={{
           clickable: true,
         }}
@@ -42,15 +43,7 @@ const Banner = () => {
       >
         {banners.map((item) => (
           <SwiperSlide key={uuid()}>
-            <img
-              src={item.hinhAnh}
-              alt={`banner-${item.maBanner}`}
-              style={{
-                width: "100%",
-                objectFit: "fill",
-                height: "100%",
-              }}
-            />
+            <img src={item.hinhAnh} alt={`banner-${item.maBanner}`} />
           </SwiperSlide>
         ))}
       </Swiper>

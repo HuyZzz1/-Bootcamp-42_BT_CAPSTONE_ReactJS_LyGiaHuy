@@ -6,12 +6,8 @@ export const Wrapper = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
-  height: 100%;
-  padding: 75px 0;
-
-  @media (max-width: 990px) {
-    height: 100% !important;
-  }
+  min-height: calc(100vh - 60px);
+  padding: 30px 0;
 `;
 
 export const WrapperContent = styled.div`

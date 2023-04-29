@@ -8,16 +8,19 @@ import { Button, Form, Input, Avatar, Modal } from "antd";
 import { formValidate } from "../../services/helper";
 import { UserOutlined } from "@ant-design/icons";
 import SignUp from "./SignUp";
-import { apiSignIn, apiGetUser } from "../../services/request/api";
-import { ShowSuccess, ShowError } from "../Message";
+import { useNavigate } from "react-router-dom";
+import { ShowError, ShowSuccess } from "../Message";
+import { apiSignIn } from "../../services/request/api";
 import { useDispatch } from "react-redux";
-import { getUser } from "../../redux/appSlice";
+import { setUser } from "../../redux/movieSlice";
 
 const SignIn = (_, ref) => {
-  const dispatch = useDispatch();
+  const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
   const signUpRef = useRef();
+  const dispatch = useDispatch();
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -25,30 +28,27 @@ const SignIn = (_, ref) => {
     },
   }));
 
-  const getInfoUser = async () => {
-    const data = await apiGetUser();
-    dispatch(getUser(data.content));
-  };
-
   const onFinish = async (values) => {
     try {
+      setIsLoading(true);
       const data = await apiSignIn({
         taiKhoan: values.account,
         matKhau: values.password,
       });
-
+      dispatch(setUser(data?.content));
       localStorage.setItem(
         "ACCESS_TOKEN",
-        JSON.stringify({
-          accessToken: data.content.accessToken,
-        })
+        JSON.stringify(data.content.accessToken)
       );
-      getInfoUser();
-      ShowSuccess("Đăng nhập thành công");
-      form.resetFields();
+      setIsLoading(false);
       setIsModalOpen(false);
+      ShowSuccess("Đăng nhập thành công");
+      navigation(1);
+      form.resetFields();
     } catch (error) {
+      setIsLoading(false);
       ShowError(error?.response?.data?.content);
+      form.resetFields();
     }
   };
 
@@ -102,6 +102,7 @@ const SignIn = (_, ref) => {
               size="large"
               type="primary"
               style={{ width: "100%" }}
+              disabled={isLoading}
             >
               Đăng nhập
             </Button>

@@ -3,41 +3,42 @@ import React, {
   forwardRef,
   useImperativeHandle,
   useRef,
+  useEffect,
 } from "react";
 import { Button, Form, Input, Table, Row, Col, Space, Tabs } from "antd";
 import SignUp from "../SignUp";
-import { useSelector } from "react-redux";
 import { StyledModal } from "./styled";
 import { column } from "./column";
-import { updateUser, apiGetUser } from "../../../services/request/api";
+import { updateUser } from "../../../services/request/api";
 import { ShowSuccess, ShowError } from "../../Message";
-import { useDispatch } from "react-redux";
-import { getUser } from "../../../redux/appSlice";
+import { apiGetUser } from "../../../services/request/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../../redux/movieSlice";
 
 const Info = (_, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const user = useSelector((state) => state.app.user);
+  const [infoUser, setInfoUser] = useState();
   const [form] = Form.useForm();
   const signUpRef = useRef();
-
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.movie.user);
+
+  const getUser = async () => {
+    const data = await apiGetUser();
+    setInfoUser(data?.content);
+  };
 
   useImperativeHandle(ref, () => ({
     open: () => {
       setIsModalOpen(true);
       form.setFieldsValue({
-        name: user.hoTen,
-        email: user.email,
-        account: user.taiKhoan,
-        password: user.matKhau,
+        name: user?.hoTen,
+        email: user?.email,
+        account: user?.taiKhoan,
+        password: user?.matKhau,
       });
     },
   }));
-
-  const getInfoUser = async () => {
-    const data = await apiGetUser();
-    dispatch(getUser(data.content));
-  };
 
   const onFinish = async (values) => {
     try {
@@ -45,9 +46,16 @@ const Info = (_, ref) => {
         taiKhoan: values.account,
         email: values.email,
         hoTen: values.name,
-        password: values ? values.password : user.matKhau,
+        matKhau: values.password ? values.password : infoUser?.matKhau,
       });
-      getInfoUser();
+      dispatch(
+        setUser({
+          email: values.email,
+          hoTen: values.name,
+          taiKhoan: values.account,
+        })
+      );
+      getUser();
       ShowSuccess("Cập nhật thành công");
     } catch (error) {
       ShowError(error?.response?.data?.content);
@@ -57,6 +65,10 @@ const Info = (_, ref) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
@@ -162,7 +174,7 @@ const Info = (_, ref) => {
                 <Table
                   size="small"
                   columns={column()}
-                  dataSource={user.thongTinDatVe}
+                  dataSource={infoUser?.thongTinDatVe}
                   pagination={{
                     position: ["bottomCenter"],
                   }}

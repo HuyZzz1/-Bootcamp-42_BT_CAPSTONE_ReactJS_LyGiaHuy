@@ -40,8 +40,10 @@ export const column = () => [
     render: (item) => {
       return (
         <Space style={{ flexWrap: "wrap" }}>
-          {item.danhSachGhe.map((seat) => (
-            <Tag color="blue">{seat.tenGhe}</Tag>
+          {item.danhSachGhe.map((seat, index) => (
+            <Tag color="blue" key={index}>
+              {seat.tenGhe}
+            </Tag>
           ))}
         </Space>
       );

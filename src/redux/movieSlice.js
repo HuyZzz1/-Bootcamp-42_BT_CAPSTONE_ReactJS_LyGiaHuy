@@ -3,9 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   listSeatSelected: [],
   user: {},
+  admin: {},
 };
 
-export const appSlice = createSlice({
+export const movieSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
@@ -26,12 +27,15 @@ export const appSlice = createSlice({
     resetBooking: (state) => {
       return { ...state, listSeatSelected: [] };
     },
-    getUser: (state, action) => {
+    setUser: (state, action) => {
       return { ...state, user: action.payload };
+    },
+    setAdmin: (state, action) => {
+      return { ...state, admin: action.payload };
     },
   },
 });
 
-export const { booking, resetBooking, getUser } = appSlice.actions;
+export const { booking, resetBooking, setUser, setAdmin } = movieSlice.actions;
 
-export default appSlice.reducer;
+export default movieSlice.reducer;
