@@ -35,11 +35,11 @@ const SignIn = (_, ref) => {
         taiKhoan: values.account,
         matKhau: values.password,
       });
-      dispatch(setUser(data?.content));
       localStorage.setItem(
         "ACCESS_TOKEN",
-        JSON.stringify(data.content.accessToken)
+        JSON.stringify(data?.content?.accessToken)
       );
+      dispatch(setUser(data?.content));
       setIsLoading(false);
       setIsModalOpen(false);
       ShowSuccess("Đăng nhập thành công");

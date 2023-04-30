@@ -83,6 +83,17 @@ export const apiBooking = async (params) => {
   return data;
 };
 
+export const apiGetListUser = async (params) => {
+  const { data } = await http.get("/QuanLyNguoiDung/LayDanhSachNguoiDung", {
+    params: {
+      MaNhom: "GP00",
+      tuKhoa: params,
+    },
+  });
+
+  return data;
+};
+
 export const apiGetUser = async () => {
   const { data } = await http.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
 
@@ -90,10 +101,50 @@ export const apiGetUser = async () => {
 };
 
 export const updateUser = async (params) => {
-  const { data } = await http.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", {
+  const { data } = await http.post(
+    "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+    {
+      ...params,
+      maNhom: "GP00",
+      maLoaiNguoiDung: "KhachHang",
+    }
+  );
+
+  return data;
+};
+
+export const apiGetAdmin = async () => {
+  const { data } = await httpFormData.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
+
+  return data;
+};
+
+export const apiUpdateUserAdmin = async (params) => {
+  const { data } = await httpFormData.post(
+    "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+    {
+      ...params,
+      maNhom: "GP00",
+    }
+  );
+
+  return data;
+};
+
+export const apiDeleteUserAdmin = async (account) => {
+  const { data } = await httpFormData.delete("/QuanLyNguoiDung/XoaNguoiDung", {
+    params: {
+      TaiKhoan: account,
+    },
+  });
+
+  return data;
+};
+
+export const apiAddUser = async (params) => {
+  const { data } = await httpFormData.post("/QuanLyNguoiDung/ThemNguoiDung", {
     ...params,
     maNhom: "GP00",
-    maLoaiNguoiDung: "KhachHang",
   });
 
   return data;

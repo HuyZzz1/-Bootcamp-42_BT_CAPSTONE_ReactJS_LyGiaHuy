@@ -7,6 +7,7 @@ import Header from "./components/Layout/Header";
 import SignIn from "./pages/Admin/SignIn";
 import Admin from "./components/Layout/Admin";
 import MoviesManagement from "./pages/Admin/MoviesManagement";
+import UserManagement from "./pages/Admin/UserManagement";
 
 const App = () => {
   return (
@@ -19,7 +20,7 @@ const App = () => {
         </Route>
         <Route path="/admin/sign-in" element={<SignIn />} />
         <Route path="/admin" element={<Admin />}>
-          <Route path="/admin" element={<SignIn />} />
+          <Route path="/admin" element={<UserManagement />} />
           <Route
             path="/admin/movies-management"
             element={<MoviesManagement />}

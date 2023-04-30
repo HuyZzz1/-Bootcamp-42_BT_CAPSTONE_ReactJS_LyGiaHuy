@@ -12,7 +12,7 @@ import { column } from "./column";
 import { updateUser } from "../../../services/request/api";
 import { ShowSuccess, ShowError } from "../../Message";
 import { apiGetUser } from "../../../services/request/api";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/movieSlice";
 
 const Info = (_, ref) => {
@@ -21,7 +21,6 @@ const Info = (_, ref) => {
   const [form] = Form.useForm();
   const signUpRef = useRef();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.movie.user);
 
   const getUser = async () => {
     const data = await apiGetUser();
@@ -32,29 +31,23 @@ const Info = (_, ref) => {
     open: () => {
       setIsModalOpen(true);
       form.setFieldsValue({
-        name: user?.hoTen,
-        email: user?.email,
-        account: user?.taiKhoan,
-        password: user?.matKhau,
+        hoTen: infoUser?.hoTen,
+        email: infoUser?.email,
+        taiKhoan: infoUser?.taiKhoan,
+        matKhau: infoUser?.matKhau,
       });
     },
   }));
 
   const onFinish = async (values) => {
     try {
-      await updateUser({
-        taiKhoan: values.account,
+      const data = await updateUser({
+        taiKhoan: values.taiKhoan,
         email: values.email,
-        hoTen: values.name,
-        matKhau: values.password ? values.password : infoUser?.matKhau,
+        hoTen: values.hoTen,
+        matKhau: values.matKhau,
       });
-      dispatch(
-        setUser({
-          email: values.email,
-          hoTen: values.name,
-          taiKhoan: values.account,
-        })
-      );
+      dispatch(setUser(data?.content));
       getUser();
       ShowSuccess("Cập nhật thành công");
     } catch (error) {
@@ -102,7 +95,7 @@ const Info = (_, ref) => {
                             Họ tên
                           </p>
                         }
-                        name="name"
+                        name="hoTen"
                       >
                         <Input placeholder="Tài khoản" />
                       </Form.Item>
@@ -124,7 +117,7 @@ const Info = (_, ref) => {
                             Tài khoản
                           </p>
                         }
-                        name="account"
+                        name="taiKhoan"
                       >
                         <Input placeholder="Tài khoản" />
                       </Form.Item>
@@ -136,7 +129,7 @@ const Info = (_, ref) => {
                             Mật khẩu
                           </p>
                         }
-                        name="password"
+                        name="matKhau"
                       >
                         <Input.Password placeholder="Mật khẩu" />
                       </Form.Item>

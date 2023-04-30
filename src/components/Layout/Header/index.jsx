@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AutoComplete, Input, Affix, Avatar, Dropdown } from "antd";
-import { Wrapper, Logo, Search, WrapperLoading } from "./styled";
+import { Wrapper, Logo, Search } from "./styled";
 import { StyledButtonAntd } from "../../styled";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SignIn from "../../Popup/SignIn";
 import SignUp from "../../Popup/SignUp";
 import { UserOutlined } from "@ant-design/icons";
@@ -16,29 +16,21 @@ import Loading from "../../Loading";
 
 const Header = () => {
   const navigation = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [movies, setMovies] = useState([]);
   const [keyword, setKeyword] = useState("");
-  const [infoUser, setInfoUser] = useState();
   const user = useSelector((state) => state.movie.user);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const signInRef = useRef();
   const signUpRef = useRef();
   const infoRef = useRef();
 
-  const onInfo = () => infoRef.current.open(infoUser);
-
   const getMovies = async () => {
     const data = await apiGetMovies();
     setMovies(data.content);
-    setLoading(false);
-  };
-
-  const getUser = async () => {
-    const data = await apiGetUser();
-    setInfoUser(data?.content);
   };
 
   const onLogOut = () => {
@@ -81,10 +73,18 @@ const Header = () => {
 
   useEffect(() => {
     getMovies();
-    getUser();
   }, []);
 
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    const getUser = async () => {
+      const data = await apiGetUser();
+      dispatch(setUser(data?.content));
+    };
+
+    getUser();
+  }, [dispatch]);
+
+  // if (isLoading) return <Loading />;
 
   return (
     <>
@@ -122,7 +122,11 @@ const Header = () => {
                 items: [
                   {
                     key: 1,
-                    label: <p onClick={onInfo}>Thông tin tài khoản</p>,
+                    label: (
+                      <p onClick={() => infoRef.current.open()}>
+                        Thông tin tài khoản
+                      </p>
+                    ),
                   },
                   {
                     key: 2,

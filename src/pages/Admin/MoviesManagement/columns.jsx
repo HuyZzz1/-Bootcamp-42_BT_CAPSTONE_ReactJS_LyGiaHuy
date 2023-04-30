@@ -11,12 +11,14 @@ export const column = (onEditMovie, onDelete, onShowTimes) => [
     title: "Mã phim",
     dataIndex: "maPhim",
     width: 100,
+    align: "center",
   },
   {
     key: "image",
     title: "Hình ảnh",
     dataIndex: "hinhAnh",
     width: 100,
+    align: "center",
     render: (value) => (
       <Image
         width={60}
@@ -30,7 +32,7 @@ export const column = (onEditMovie, onDelete, onShowTimes) => [
     key: "name",
     title: "Tên phim",
     dataIndex: "tenPhim",
-    width: 300,
+    width: 350,
   },
   {
     key: "description",
@@ -41,7 +43,8 @@ export const column = (onEditMovie, onDelete, onShowTimes) => [
   {
     key: "status",
     title: "Trạng thái",
-    width: 100,
+    width: 150,
+    align: "center",
     render: (item) => {
       return (
         <>

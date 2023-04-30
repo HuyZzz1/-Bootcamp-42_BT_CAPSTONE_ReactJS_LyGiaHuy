@@ -27,10 +27,10 @@ const SignIn = () => {
         dispatch(setAdmin(data?.content));
         localStorage.setItem(
           "ACCESS_TOKEN_ADMIN",
-          JSON.stringify(data.content.accessToken),
-          navigation("/admin"),
-          ShowSuccess("Đăng nhập thành công")
+          JSON.stringify(data.content.accessToken)
         );
+        navigation("/admin");
+        ShowSuccess("Đăng nhập thành công");
         setIsLoading(false);
         form.resetFields();
       } else {
@@ -83,7 +83,7 @@ const SignIn = () => {
                       marginBottom: "16px",
                     }}
                   >
-                    <h1>Đăng nhập</h1>
+                    <h1 style={{ fontSize: 30 }}>Đăng nhập</h1>
                   </div>
                   <Form.Item
                     name="account"

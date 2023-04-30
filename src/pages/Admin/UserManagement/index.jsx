@@ -2,43 +2,40 @@ import React, { useEffect, useState, useRef } from "react";
 import { Card, Form, Input, Button, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { column } from "./columns";
-import { apiDeleteMovie, apiGetMovies } from "../../../services/request/api";
-import AddMovie from "./Modal/AddMovie";
-import EditMovie from "./Modal/EditMovie";
-import { ShowSuccess } from "../../../components/Message";
-import Swal from "sweetalert2";
-import ShowTimes from "./Modal/ShowTimes";
+import { apiGetListUser } from "../../../services/request/api";
 import { useDebouncedCallback } from "use-debounce";
+import Add from "./Modal/Add";
+import Edit from "./Modal/Edit";
+import Swal from "sweetalert2";
+import { ShowSuccess, ShowError } from "../../../components/Message";
+import { apiDeleteUserAdmin } from "../../../services/request/api";
 
 const MoviesManagement = () => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const addMovieRef = useRef();
-  const editMovieRef = useRef();
-  const showTimesRef = useRef();
+  const [loading, isLoading] = useState(false);
+  const addRef = useRef();
+  const editRef = useRef();
 
-  const onAddMovie = () => addMovieRef.current.open();
-  const onEditMovie = (item) => editMovieRef.current.open(item);
-  const onShowTimes = (item) => showTimesRef.current.open(item);
+  const onEdit = (item) => editRef.current.open(item);
 
-  const getMovies = async () => {
-    setLoading(true);
-    const data = await apiGetMovies();
-    setData(data.content);
-    setLoading(false);
+  const getListUser = async (value) => {
+    if (!value) {
+      isLoading(true);
+      const data = await apiGetListUser();
+      setData(data?.content);
+      isLoading(false);
+    }
+
+    if (value) {
+      isLoading(true);
+      const data = await apiGetListUser(value);
+      setData(data?.content);
+      isLoading(false);
+    }
   };
 
   const onSearch = async (value) => {
-    if (value) {
-      const newData = data.filter(
-        (item) => item.tenPhim.toUpperCase().indexOf(value.toUpperCase()) !== -1
-      );
-      setData(newData);
-    }
-
-    if (!value) {
-      getMovies();
-    }
+    getListUser(value);
   };
 
   const onChangeKeyWord = useDebouncedCallback((e) => {
@@ -46,7 +43,7 @@ const MoviesManagement = () => {
     onSearch(value);
   }, 1000);
 
-  const onDelete = (id) => {
+  const onDelete = (account) => {
     Swal.fire({
       icon: "warning",
       text: "Bạn muốn xoá dữ liệu này chứ?",
@@ -56,24 +53,27 @@ const MoviesManagement = () => {
       confirmButtonColor: "#1677ff",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await apiDeleteMovie(id);
-        getMovies();
-        ShowSuccess("Xoá thành công");
+        try {
+          await apiDeleteUserAdmin(account);
+          getListUser();
+          ShowSuccess("Xoá thành công");
+        } catch (error) {
+          ShowError(error?.response?.data?.content);
+        }
       }
     });
   };
 
   useEffect(() => {
-    getMovies();
+    getListUser();
   }, []);
 
   return (
     <>
-      <AddMovie ref={addMovieRef} getMovies={getMovies} />
-      <EditMovie ref={editMovieRef} getMovies={getMovies} />
-      <ShowTimes ref={showTimesRef} />
+      <Add ref={addRef} getListUser={getListUser} />
+      <Edit ref={editRef} getListUser={getListUser} />
       <Card style={{ marginTop: 10 }} bodyStyle={{ padding: "10px 25px" }}>
-        <h2>Quản lí phim</h2>
+        <h2>Quản lí người dùng</h2>
       </Card>
       <div style={{ padding: 10 }}>
         <Card bodyStyle={{ padding: 15 }}>
@@ -88,16 +88,17 @@ const MoviesManagement = () => {
             <Form layout="inline">
               <Form.Item>
                 <Input
-                  style={{ width: 350 }}
-                  placeholder="Nhập tên phim để tìm kiếm"
+                  style={{ width: 400 }}
+                  placeholder="Nhập tài khoản hoặc họ tên người dùng để tìm kiếm"
                   suffix={<SearchOutlined />}
+                  allowClear
                   onChange={onChangeKeyWord}
                 />
               </Form.Item>
             </Form>
             <div>
-              <Button type="primary" onClick={() => onAddMovie()}>
-                Thêm phim
+              <Button type="primary" onClick={() => addRef.current.open()}>
+                Thêm người dùng
               </Button>
             </div>
           </div>
@@ -105,15 +106,15 @@ const MoviesManagement = () => {
           <div>
             <Table
               size="small"
-              columns={column(onEditMovie, onDelete, onShowTimes)}
+              columns={column(onEdit, onDelete)}
               dataSource={data}
-              loading={loading}
               pagination={{
                 pageSize: 15,
                 position: ["bottomCenter"],
               }}
+              loading={loading}
               scroll={{
-                y: (1 - 340 / window.innerHeight) * window.innerHeight,
+                y: (1 - 350 / window.innerHeight) * window.innerHeight,
               }}
             />
           </div>
