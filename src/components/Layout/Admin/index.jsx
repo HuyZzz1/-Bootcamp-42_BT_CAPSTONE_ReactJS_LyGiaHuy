@@ -8,10 +8,12 @@ import {
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { StyledAffix } from "../../styled";
 import { useDispatch, useSelector } from "react-redux";
-import { setAdmin } from "../../../redux/movieSlice";
+import { setAdmin } from "../../../redux/appSlice";
 import { ShowSuccess } from "../../Message";
 import { apiGetAdmin } from "../../../services/request/api";
 import Info from "./Modal/Info";
+import Cookie from "js-cookie";
+
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
@@ -20,19 +22,23 @@ const Admin = () => {
   const dispatch = useDispatch();
   const [collapsed, setCollapsed] = useState(location.pathname);
   const [activeKey, setActiveKey] = useState(location.pathname);
-  const admin = useSelector((state) => state.movie.admin);
+  const admin = useSelector((state) => state.app.admin);
   const infoRef = useRef();
+  const loadingInfo = useRef(false);
 
   const handleLogOut = () => {
     navigation("/admin/sign-in");
-    localStorage.removeItem("ACCESS_TOKEN_ADMIN");
+    Cookie.remove("ACCESS_TOKEN_ADMIN");
     dispatch(setAdmin({}));
     ShowSuccess("Đăng xuất thành công");
   };
 
   const getUser = async () => {
+    if (loadingInfo.current) return;
+    loadingInfo.current = true;
     const data = await apiGetAdmin();
     dispatch(setAdmin(data?.content));
+    loadingInfo.current = false;
   };
 
   useEffect(() => {
@@ -128,7 +134,7 @@ const Admin = () => {
                 >
                   <Avatar size={45} icon={<UserOutlined />} />
                   <p style={{ fontWeight: 500, color: "white" }}>
-                    {admin?.taiKhoan}
+                    {admin?.hoTen}
                   </p>
                 </div>
               </Dropdown>

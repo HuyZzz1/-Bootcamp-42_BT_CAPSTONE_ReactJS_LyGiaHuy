@@ -94,7 +94,7 @@ const Edit = ({ getListUser }, ref) => {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label="Số điện thoại" name="soDt">
+              <Form.Item label="Số điện thoại" name="soDT">
                 <Input placeholder="Nhập số điện thoại" />
               </Form.Item>
             </Col>

@@ -1,39 +1,27 @@
-import React, {
-  useState,
-  forwardRef,
-  useImperativeHandle,
-  useEffect,
-} from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { Form, Row, Col, Input, Space, Button, Modal } from "antd";
-import {
-  apiGetAdmin,
-  apiUpdateUserAdmin,
-} from "../../../../services/request/api";
+import { apiUpdateUserAdmin } from "../../../../services/request/api";
 import { ShowSuccess, ShowError } from "../../../Message";
 import { useDispatch } from "react-redux";
-import { setAdmin } from "../../../../redux/movieSlice";
+import { setAdmin } from "../../../../redux/appSlice";
+import { useSelector } from "react-redux";
 
 const Info = (_, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-
-  const getUser = async () => {
-    const data = await apiGetAdmin();
-    setUser(data?.content);
-  };
+  const admin = useSelector((state) => state.app.admin);
 
   useImperativeHandle(ref, () => ({
-    open: () => {
-      setIsModalOpen(true);
+    open: async () => {
       form.setFieldsValue({
-        hoTen: user?.hoTen,
-        email: user?.email,
-        taiKhoan: user?.taiKhoan,
-        matKhau: user?.matKhau,
-        soDT: user?.soDT,
+        hoTen: admin?.hoTen,
+        email: admin?.email,
+        taiKhoan: admin?.taiKhoan,
+        matKhau: admin?.matKhau,
+        soDT: admin?.soDT,
       });
+      setIsModalOpen(true);
     },
   }));
 
@@ -44,7 +32,6 @@ const Info = (_, ref) => {
         maLoaiNguoiDung: "QuanTri",
       });
       dispatch(setAdmin(data?.content));
-      getUser();
       ShowSuccess("Chỉnh sửa thông tin thành công");
     } catch (error) {
       ShowError(error?.response?.data?.content);
@@ -54,10 +41,6 @@ const Info = (_, ref) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   return (
     <Modal

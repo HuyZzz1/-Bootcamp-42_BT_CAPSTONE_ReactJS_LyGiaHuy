@@ -1,19 +1,23 @@
 import styled from "styled-components";
 
 export const WrapperSwiper = styled.div`
-  height: 700px;
+  position: relative;
+  height: 100%;
+
+  .swiper-wrapper {
+    height: 700px !important;
+
+    @media (max-width: 567px) {
+      height: 250px !important;
+    }
+  }
 
   .swiper-slide {
-    width: 100% !important;
+    height: 100% !important;
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: fill;
     }
-  }
-
-  .swiper {
-    height: 100%;
   }
 `;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Button, Card, Tag } from "antd";
 import { Wrapper, Seat, StyledButton } from "./styled";
 import { useSelector, useDispatch } from "react-redux";
-import { booking, resetBooking } from "../../redux/movieSlice";
+import { booking, resetBooking, setUser } from "../../redux/appSlice";
 import { useParams } from "react-router-dom";
 import { apiGetTicketRoom } from "../../services/request/api";
 import { apiBooking } from "../../services/request/api";
@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SignIn from "../../components/Popup/SignIn";
 import Loading from "../../components/Loading";
+import { apiGetUser } from "../../services/request/api";
 
 const TicketRoom = () => {
   const signInRef = useRef();
@@ -18,7 +19,8 @@ const TicketRoom = () => {
   const [dataTicketRoom, setDataTicketRoom] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const dataSeatSelected = useSelector((state) => state.movie.listSeatSelected);
+  const dataSeatSelected = useSelector((state) => state.app.listSeatSelected);
+  const user = useSelector((state) => state.app.user);
 
   const getTicketRoom = async () => {
     const data = await apiGetTicketRoom(maLichChieu);
@@ -26,7 +28,12 @@ const TicketRoom = () => {
     setIsLoading(false);
   };
 
-  const handleBooking = () => {
+  const getUser = async () => {
+    const data = await apiGetUser();
+    dispatch(setUser(data?.content));
+  };
+
+  const handleBooking = async () => {
     if (dataSeatSelected.length === 0) {
       return Swal.fire({
         icon: "error",
@@ -35,7 +42,7 @@ const TicketRoom = () => {
         confirmButtonText: "Đã hiểu",
         confirmButtonColor: "#1677ff",
       });
-    } else if (!localStorage.getItem("ACCESS_TOKEN")) {
+    } else if (!user?.email) {
       return Swal.fire({
         icon: "error",
         title: "Vui lòng đăng nhập trước khi đặt",
@@ -50,12 +57,13 @@ const TicketRoom = () => {
         }
       });
     }
-    apiBooking({
+    await apiBooking({
       maLichChieu: maLichChieu,
       danhSachVe: dataSeatSelected,
     });
-    dispatch(resetBooking());
     getTicketRoom();
+    getUser();
+    dispatch(resetBooking());
     MySwal.fire({
       icon: "success",
       title: "Đặt vé thành công",

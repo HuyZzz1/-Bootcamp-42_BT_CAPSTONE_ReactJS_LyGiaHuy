@@ -6,7 +6,7 @@ const initialState = {
   admin: {},
 };
 
-export const movieSlice = createSlice({
+export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
@@ -36,6 +36,6 @@ export const movieSlice = createSlice({
   },
 });
 
-export const { booking, resetBooking, setUser, setAdmin } = movieSlice.actions;
+export const { booking, resetBooking, setUser, setAdmin } = appSlice.actions;
 
-export default movieSlice.reducer;
+export default appSlice.reducer;

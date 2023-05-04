@@ -35,10 +35,10 @@ const Banner = () => {
           clickable: true,
         }}
         navigation={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 2500,
+        //   disableOnInteraction: false,
+        // }}
         modules={[Navigation, Pagination, Autoplay]}
       >
         {banners.map((item) => (

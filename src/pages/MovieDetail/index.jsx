@@ -4,7 +4,7 @@ import { Wrapper, WrapperContent, Title } from "./styled";
 import { Container } from "../../components/styled";
 import dayjs from "dayjs";
 import { v4 as uuid } from "uuid";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import VideoTrailer from "../../components/Popup/VideoTrailer";
 import { apiGetMovieDetails } from "../../services/request/api";
 import { apiGetShowtime } from "../../services/request/api";
@@ -12,7 +12,6 @@ import { apiGetShowtime } from "../../services/request/api";
 const { Paragraph, Text } = Typography;
 
 const MovieDetail = () => {
-  const location = useLocation();
   const { maPhim } = useParams();
   const navigation = useNavigate();
   const videoTrailer = useRef();
@@ -40,7 +39,7 @@ const MovieDetail = () => {
   useEffect(() => {
     getMovieDetail();
     getShowtime();
-  }, [location]);
+  }, []);
 
   return (
     <>
@@ -117,7 +116,7 @@ const MovieDetail = () => {
                   return {
                     key: index,
                     label: (
-                      <div>
+                      <div key={`${item?.logo}-${index}`}>
                         <Avatar size={40} src={item?.logo} />
                       </div>
                     ),

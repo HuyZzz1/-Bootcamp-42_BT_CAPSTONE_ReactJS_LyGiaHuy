@@ -5,9 +5,10 @@ import { Wrapper, ContentLeft, ContentRight, StyledForm } from "./styled";
 import { formValidate } from "../../../services/helper";
 import { apiSignIn } from "../../../services/request/api";
 import { useDispatch } from "react-redux";
-import { setAdmin } from "../../../redux/movieSlice";
+import { setAdmin } from "../../../redux/appSlice";
 import { ShowSuccess, ShowError } from "../../../components/Message";
 import { useNavigate } from "react-router-dom";
+import Cookie from "js-cookie";
 
 const SignIn = () => {
   const navigation = useNavigate();
@@ -24,11 +25,8 @@ const SignIn = () => {
       });
 
       if (data.content.maLoaiNguoiDung === "QuanTri") {
+        Cookie.set("ACCESS_TOKEN_ADMIN", data?.content?.accessToken);
         dispatch(setAdmin(data?.content));
-        localStorage.setItem(
-          "ACCESS_TOKEN_ADMIN",
-          JSON.stringify(data.content.accessToken)
-        );
         navigation("/admin");
         ShowSuccess("Đăng nhập thành công");
         setIsLoading(false);
@@ -40,7 +38,6 @@ const SignIn = () => {
     } catch (error) {
       setIsLoading(false);
       ShowError(error?.response?.data?.content);
-      form.resetFields();
     }
   };
 

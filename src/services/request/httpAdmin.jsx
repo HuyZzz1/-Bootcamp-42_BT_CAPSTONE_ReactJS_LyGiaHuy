@@ -6,7 +6,7 @@ const http = axios.create({
   timeout: 30000,
   headers: {
     Accept: "application/json",
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
     TokenCybersoft: process.env.REACT_APP_TOKEN,
   },
 });

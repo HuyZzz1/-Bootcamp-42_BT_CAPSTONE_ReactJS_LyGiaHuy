@@ -1,12 +1,36 @@
 import axios from "axios";
-import { TOKEN_CYBERSOFT } from "../../utils/constant";
+import Cookie from "js-cookie";
 
 const http = axios.create({
-  baseURL: "https://movienew.cybersoft.edu.vn/api",
+  baseURL: process.env.REACT_APP_PUBLIC_API_URL,
+  timeout: 30000,
   headers: {
-    TokenCybersoft: TOKEN_CYBERSOFT,
-    Authorization: `Bearer ${JSON.parse(localStorage.getItem("ACCESS_TOKEN"))}`,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    TokenCybersoft: process.env.REACT_APP_TOKEN,
   },
 });
+
+http.interceptors.request.use(
+  (config) => {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${Cookie.get("ACCESS_TOKEN")}`,
+    };
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+http.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default http;

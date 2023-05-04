@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { AutoComplete, Input, Affix, Avatar, Dropdown } from "antd";
 import { Wrapper, Logo, Search } from "./styled";
 import { StyledButtonAntd } from "../../styled";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import SignIn from "../../Popup/SignIn";
 import SignUp from "../../Popup/SignUp";
 import { UserOutlined } from "@ant-design/icons";
@@ -11,18 +11,17 @@ import { ShowSuccess } from "../../Message";
 import { apiGetMovies, apiGetUser } from "../../../services/request/api";
 import Info from "../../Popup/Info";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../redux/movieSlice";
-import Loading from "../../Loading";
+import { setUser } from "../../../redux/appSlice";
+import Cookie from "js-cookie";
 
 const Header = () => {
   const navigation = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [movies, setMovies] = useState([]);
   const [keyword, setKeyword] = useState("");
-  const user = useSelector((state) => state.movie.user);
-  const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector((state) => state.app.user);
+  const loadingInfo = useRef(false);
 
   const signInRef = useRef();
   const signUpRef = useRef();
@@ -36,7 +35,7 @@ const Header = () => {
   const onLogOut = () => {
     navigation("/");
     dispatch(setUser({}));
-    localStorage.removeItem("ACCESS_TOKEN");
+    Cookie.remove("ACCESS_TOKEN");
     ShowSuccess("Đăng xuất thành công");
   };
 
@@ -54,7 +53,7 @@ const Header = () => {
             style={{ display: "flex", alignItems: "center", gap: 10 }}
           >
             <Avatar src={movie.hinhAnh} size={50} />
-            <h4>{movie?.tenPhim}</h4>
+            <h4>{movie.tenPhim}</h4>
           </div>
         ),
       };
@@ -71,20 +70,21 @@ const Header = () => {
     setKeyword("");
   };
 
+  const getUser = async () => {
+    if (loadingInfo.current) return;
+    loadingInfo.current = true;
+    const data = await apiGetUser();
+    dispatch(setUser(data?.content));
+    loadingInfo.current = false;
+  };
+
   useEffect(() => {
     getMovies();
   }, []);
 
   useEffect(() => {
-    const getUser = async () => {
-      const data = await apiGetUser();
-      dispatch(setUser(data?.content));
-    };
-
     getUser();
-  }, [dispatch]);
-
-  // if (isLoading) return <Loading />;
+  }, []);
 
   return (
     <>

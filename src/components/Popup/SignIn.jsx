@@ -12,7 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { ShowError, ShowSuccess } from "../Message";
 import { apiSignIn } from "../../services/request/api";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/movieSlice";
+import { setUser } from "../../redux/appSlice";
+import { apiGetUser } from "../../services/request/api";
+import Cookie from "js-cookie";
 
 const SignIn = (_, ref) => {
   const navigation = useNavigate();
@@ -28,6 +30,11 @@ const SignIn = (_, ref) => {
     },
   }));
 
+  const getUser = async () => {
+    const data = await apiGetUser();
+    dispatch(setUser(data?.content));
+  };
+
   const onFinish = async (values) => {
     try {
       setIsLoading(true);
@@ -35,16 +42,14 @@ const SignIn = (_, ref) => {
         taiKhoan: values.account,
         matKhau: values.password,
       });
-      localStorage.setItem(
-        "ACCESS_TOKEN",
-        JSON.stringify(data?.content?.accessToken)
-      );
-      dispatch(setUser(data?.content));
+      Cookie.set("ACCESS_TOKEN", data?.content?.accessToken);
       setIsLoading(false);
       setIsModalOpen(false);
       ShowSuccess("Đăng nhập thành công");
       navigation(1);
       form.resetFields();
+      console.log(Cookie.get("ACCESS_TOKEN"));
+      getUser();
     } catch (error) {
       setIsLoading(false);
       ShowError(error?.response?.data?.content);

@@ -3,7 +3,6 @@ import React, {
   forwardRef,
   useImperativeHandle,
   useRef,
-  useEffect,
 } from "react";
 import { Button, Form, Input, Table, Row, Col, Space, Tabs } from "antd";
 import SignUp from "../SignUp";
@@ -11,30 +10,24 @@ import { StyledModal } from "./styled";
 import { column } from "./column";
 import { updateUser } from "../../../services/request/api";
 import { ShowSuccess, ShowError } from "../../Message";
-import { apiGetUser } from "../../../services/request/api";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../../redux/movieSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../../redux/appSlice";
 
 const Info = (_, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [infoUser, setInfoUser] = useState();
   const [form] = Form.useForm();
   const signUpRef = useRef();
+  const user = useSelector((state) => state.app.user);
   const dispatch = useDispatch();
-
-  const getUser = async () => {
-    const data = await apiGetUser();
-    setInfoUser(data?.content);
-  };
 
   useImperativeHandle(ref, () => ({
     open: () => {
       setIsModalOpen(true);
       form.setFieldsValue({
-        hoTen: infoUser?.hoTen,
-        email: infoUser?.email,
-        taiKhoan: infoUser?.taiKhoan,
-        matKhau: infoUser?.matKhau,
+        hoTen: user?.hoTen,
+        email: user?.email,
+        taiKhoan: user?.taiKhoan,
+        matKhau: user?.matKhau,
       });
     },
   }));
@@ -47,8 +40,7 @@ const Info = (_, ref) => {
         hoTen: values.hoTen,
         matKhau: values.matKhau,
       });
-      dispatch(setUser(data?.content));
-      getUser();
+      dispatch(setUser(data.content));
       ShowSuccess("Cập nhật thành công");
     } catch (error) {
       ShowError(error?.response?.data?.content);
@@ -58,10 +50,6 @@ const Info = (_, ref) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   return (
     <>
@@ -167,7 +155,7 @@ const Info = (_, ref) => {
                 <Table
                   size="small"
                   columns={column()}
-                  dataSource={infoUser?.thongTinDatVe}
+                  dataSource={user?.thongTinDatVe}
                   pagination={{
                     position: ["bottomCenter"],
                   }}

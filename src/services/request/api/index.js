@@ -1,5 +1,6 @@
 import http from "../http";
 import httpFormData from "../httpFormData";
+import httpAdmin from "../httpAdmin";
 
 export const apiGetMovies = async () => {
   const { data } = await http.get("/QuanLyPhim/LayDanhSachPhim", {
@@ -101,26 +102,23 @@ export const apiGetUser = async () => {
 };
 
 export const updateUser = async (params) => {
-  const { data } = await http.post(
-    "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
-    {
-      ...params,
-      maNhom: "GP00",
-      maLoaiNguoiDung: "KhachHang",
-    }
-  );
+  const { data } = await http.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", {
+    ...params,
+    maNhom: "GP00",
+    maLoaiNguoiDung: "KhachHang",
+  });
 
   return data;
 };
 
 export const apiGetAdmin = async () => {
-  const { data } = await httpFormData.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
+  const { data } = await httpAdmin.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
 
   return data;
 };
 
 export const apiUpdateUserAdmin = async (params) => {
-  const { data } = await httpFormData.post(
+  const { data } = await httpAdmin.post(
     "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
     {
       ...params,
@@ -132,7 +130,7 @@ export const apiUpdateUserAdmin = async (params) => {
 };
 
 export const apiDeleteUserAdmin = async (account) => {
-  const { data } = await httpFormData.delete("/QuanLyNguoiDung/XoaNguoiDung", {
+  const { data } = await httpAdmin.delete("/QuanLyNguoiDung/XoaNguoiDung", {
     params: {
       TaiKhoan: account,
     },
@@ -142,7 +140,7 @@ export const apiDeleteUserAdmin = async (account) => {
 };
 
 export const apiAddUser = async (params) => {
-  const { data } = await httpFormData.post("/QuanLyNguoiDung/ThemNguoiDung", {
+  const { data } = await httpAdmin.post("/QuanLyNguoiDung/ThemNguoiDung", {
     ...params,
     maNhom: "GP00",
   });
@@ -169,7 +167,7 @@ export const apiUpdateMovie = async (params) => {
 };
 
 export const apiDeleteMovie = async (id) => {
-  const { data } = await httpFormData.delete("/QuanLyPhim/XoaPhim", {
+  const { data } = await httpAdmin.delete("/QuanLyPhim/XoaPhim", {
     params: {
       MaPhim: id,
     },
@@ -179,7 +177,7 @@ export const apiDeleteMovie = async (id) => {
 };
 
 export const apiCreateShowtimes = async (params) => {
-  const { data } = await httpFormData.post("/QuanLyDatVe/TaoLichChieu", params);
+  const { data } = await httpAdmin.post("/QuanLyDatVe/TaoLichChieu", params);
 
   return data;
 };
