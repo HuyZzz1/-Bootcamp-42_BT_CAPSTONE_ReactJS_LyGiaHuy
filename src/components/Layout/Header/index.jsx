@@ -13,6 +13,7 @@ import Info from "../../Popup/Info";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/appSlice";
 import Cookie from "js-cookie";
+import Loading from "../../Loading";
 
 const Header = () => {
   const navigation = useNavigate();
@@ -22,6 +23,7 @@ const Header = () => {
   const [keyword, setKeyword] = useState("");
   const user = useSelector((state) => state.app.user);
   const loadingInfo = useRef(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const signInRef = useRef();
   const signUpRef = useRef();
@@ -73,18 +75,24 @@ const Header = () => {
   const getUser = async () => {
     if (loadingInfo.current) return;
     loadingInfo.current = true;
-    const data = await apiGetUser();
-    dispatch(setUser(data?.content));
-    loadingInfo.current = false;
+    try {
+      const data = await apiGetUser();
+      dispatch(setUser(data?.content));
+      loadingInfo.current = false;
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     getMovies();
-  }, []);
-
-  useEffect(() => {
     getUser();
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
