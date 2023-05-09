@@ -4,10 +4,7 @@ import Home from "./pages/Home";
 import MovieDetail from "./pages/MovieDetail";
 import TicketRoom from "./pages/TicketRoom";
 import Header from "./components/Layout/Header";
-import SignIn from "./pages/Admin/SignIn";
-import Admin from "./components/Layout/Admin";
-import MoviesManagement from "./pages/Admin/MoviesManagement";
-import UserManagement from "./pages/Admin/UserManagement";
+import Page404 from "./pages/Page404";
 
 const App = () => {
   return (
@@ -18,14 +15,7 @@ const App = () => {
           <Route path="/movie-detail/:maPhim" element={<MovieDetail />} />
           <Route path="/ticket-room/:maLichChieu" element={<TicketRoom />} />
         </Route>
-        <Route path="/admin/sign-in" element={<SignIn />} />
-        <Route path="/admin" element={<Admin />}>
-          <Route path="/admin" element={<UserManagement />} />
-          <Route
-            path="/admin/movies-management"
-            element={<MoviesManagement />}
-          />
-        </Route>
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </Router>
   );

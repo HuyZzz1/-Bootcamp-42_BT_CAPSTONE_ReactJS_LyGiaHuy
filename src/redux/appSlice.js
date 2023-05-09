@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   listSeatSelected: [],
   user: {},
-  admin: {},
 };
 
 export const appSlice = createSlice({
@@ -30,12 +29,9 @@ export const appSlice = createSlice({
     setUser: (state, action) => {
       return { ...state, user: action.payload };
     },
-    setAdmin: (state, action) => {
-      return { ...state, admin: action.payload };
-    },
   },
 });
 
-export const { booking, resetBooking, setUser, setAdmin } = appSlice.actions;
+export const { booking, resetBooking, setUser } = appSlice.actions;
 
 export default appSlice.reducer;
