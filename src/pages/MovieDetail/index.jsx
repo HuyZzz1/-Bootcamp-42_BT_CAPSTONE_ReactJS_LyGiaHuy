@@ -97,7 +97,7 @@ const MovieDetail = () => {
               <Text
                 style={{
                   color: "#1677ff",
-                  fontSize: 23,
+                  fontSize: "1.4375rem",
                   textTransform: "uppercase",
                   borderBottom: "1px solid #1677ff ",
                   paddingBottom: 5,

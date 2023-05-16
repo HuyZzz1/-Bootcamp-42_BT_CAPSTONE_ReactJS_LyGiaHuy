@@ -32,7 +32,13 @@ const data = [
 
 const Promotion = () => {
   return (
-    <div style={{ width: "100%", padding: "10px 50px", background: "#f9f9f9" }}>
+    <div
+      style={{
+        width: "100%",
+        padding: "0.625rem 3.125rem",
+        background: "#f9f9f9",
+      }}
+    >
       <div style={{ width: "100%", textAlign: "center" }}>
         <Text>Khuyến mãi</Text>
       </div>
@@ -63,7 +69,7 @@ const Promotion = () => {
                 alt={`promotion-${item.id}`}
                 style={{
                   width: "100%",
-                  height: 250,
+                  height: "15.625rem",
                   objectFit: "cover",
                   borderRadius: 12,
                 }}

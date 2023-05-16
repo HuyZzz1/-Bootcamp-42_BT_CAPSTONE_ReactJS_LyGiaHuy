@@ -56,7 +56,7 @@ const Movies = () => {
           alignItems: "center",
           justifyContent: "center",
           gap: 15,
-          paddingTop: 20,
+          paddingTop: "1.875rem",
         }}
       >
         {dataMenu.map((item) => (

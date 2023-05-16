@@ -5,10 +5,10 @@ export const WrapperSwiper = styled.div`
   height: 100%;
 
   .swiper-wrapper {
-    height: 700px !important;
+    height: 43.75rem !important;
 
     @media (max-width: 567px) {
-      height: 250px !important;
+      height: 15.625rem !important;
     }
   }
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const StyledCard = styled(Card)`
   background: transparent;
-  height: 310;
+  height: 310px;
   width: 100%;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   cursor: pointer;

@@ -11,8 +11,8 @@ export const Wrapper = styled.div`
 `;
 
 export const StyledButton = styled(Button)`
-  width: 160px;
-  height: 40px;
+  width: 10rem;
+  height: 2.5rem;
   border-radius: 20px;
   background: ${({ active }) => (active ? "#1677ff" : "")};
   color: ${({ active }) => (active ? "white" : "")};

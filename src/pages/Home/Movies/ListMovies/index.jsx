@@ -16,7 +16,7 @@ const ListMovies = ({ data }) => {
   const navigation = useNavigate();
 
   return (
-    <div style={{ width: "100%", padding: "0 50px", marginTop: 20 }}>
+    <div style={{ width: "100%", padding: "0 3.125rem", marginTop: "1.25rem" }}>
       <Swiper
         style={{ padding: "15px 0" }}
         spaceBetween={30}
@@ -84,7 +84,7 @@ const ListMovies = ({ data }) => {
                       ellipsis
                       style={{
                         color: "white",
-                        fontSize: 16,
+                        fontSize: "1rem",
                         textTransform: "uppercase",
                         padding: "0 10px",
                       }}
