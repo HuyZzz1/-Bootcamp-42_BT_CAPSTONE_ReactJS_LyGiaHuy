@@ -17,7 +17,6 @@ const dataMenu = [
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [dataSelectedMovies, setDataSelectedMovies] = useState([]);
-
   const [selectedItem, setSelectedItem] = useState(1);
 
   const getMovies = async () => {
